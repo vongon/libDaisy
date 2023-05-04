@@ -50,6 +50,10 @@ class TimerHandle
             TIM_3,     /**< 16-bit counter */
             TIM_4,     /**< 16-bit counter */
             TIM_5,     /**< 32-bit counter*/
+            TIM_13,    /**< 16-bit counter */
+            TIM_14,    /**< 16-bit counter */
+            TIM_15,    /**< 16-bit counter */
+            TIM_CNT    /**< Shortcut for array length */
         };
 
         /** @brief Direction of the auto-reload counter. 

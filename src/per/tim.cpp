@@ -66,8 +66,7 @@ static void Error_Handler()
 }
 
 // Global References
-
-static TimerHandle::Impl tim_handles[4];
+static TimerHandle::Impl tim_handles[(uint16_t)TimerHandle::Config::Peripheral::TIM_CNT];
 
 /** @brief returns a poitner to the private implementation object associated
  *   with the peripheral instance (register base address)
@@ -92,10 +91,11 @@ static TimerHandle::Impl* get_tim_impl_from_instance(TIM_TypeDef* per_instance)
 TimerHandle::Result TimerHandle::Impl::Init(const TimerHandle::Config& config)
 {
     const int tim_idx = int(config.periph);
-    if(tim_idx >= 4)
+    if(tim_idx >= (uint16_t)TimerHandle::Config::Peripheral::TIM_CNT)
         return TimerHandle::Result::ERR;
     config_                             = config;
-    constexpr TIM_TypeDef* instances[4] = {TIM2, TIM3, TIM4, TIM5};
+
+    constexpr TIM_TypeDef* instances[(uint16_t)TimerHandle::Config::Peripheral::TIM_CNT] = {TIM2, TIM3, TIM4, TIM5, TIM13, TIM14, TIM15};
 
     // HAL Initialization
     tim_hal_handle_.Instance = instances[tim_idx];
@@ -303,6 +303,18 @@ extern "C"
              *  callback structure.
              */
         }
+        else if(tim_baseHandle->Instance == TIM13){
+            __HAL_RCC_TIM13_CLK_ENABLE();
+            /** @todo: add isr support */
+        }
+        else if(tim_baseHandle->Instance == TIM14){
+            __HAL_RCC_TIM14_CLK_ENABLE();
+            /** @todo: add isr support */
+        }
+        else if(tim_baseHandle->Instance == TIM15){
+            __HAL_RCC_TIM15_CLK_ENABLE();
+            /** @todo: add isr support */
+        }
     }
 
     void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
@@ -334,6 +346,18 @@ extern "C"
              *  and is implemented as part of DAC
              *  callback structure.
              */
+        }
+        else if(tim_baseHandle->Instance == TIM13)
+        {
+            __HAL_RCC_TIM13_CLK_DISABLE();
+        }
+        else if(tim_baseHandle->Instance == TIM14)
+        {
+            __HAL_RCC_TIM14_CLK_DISABLE();
+        }
+        else if(tim_baseHandle->Instance == TIM15)
+        {
+            __HAL_RCC_TIM15_CLK_DISABLE();
         }
     }
 }

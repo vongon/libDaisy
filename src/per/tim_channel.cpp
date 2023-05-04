@@ -57,6 +57,18 @@ static uint32_t SetInstance(TIM_HandleTypeDef*              tim,
             tim->Instance = TIM5;
             af_value      = GPIO_AF2_TIM5;
             break;
+        case TimerHandle::Config::Peripheral::TIM_13:
+            tim->Instance = TIM13;
+            af_value      = GPIO_AF9_TIM13;
+            break;
+        case TimerHandle::Config::Peripheral::TIM_14:
+            tim->Instance = TIM14;
+            af_value      = GPIO_AF9_TIM14;
+            break;
+        case TimerHandle::Config::Peripheral::TIM_15:
+            tim->Instance = TIM15;
+            af_value      = GPIO_AF4_TIM15;
+            break;
     }
     return af_value;
 }
