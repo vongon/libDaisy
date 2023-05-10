@@ -75,7 +75,7 @@ static TimerHandle::Impl tim_handles[(uint16_t)TimerHandle::Config::Peripheral::
 static TimerHandle::Impl* get_tim_impl_from_instance(TIM_TypeDef* per_instance)
 {
     /** Check each impl */
-    for(int i = 0; i < 4; i++)
+    for(int i = 0; i < (uint16_t)TimerHandle::Config::Peripheral::TIM_CNT; i++)
     {
         TimerHandle::Impl* p = &tim_handles[i];
         if(p->tim_hal_handle_.Instance == per_instance)
@@ -95,7 +95,7 @@ TimerHandle::Result TimerHandle::Impl::Init(const TimerHandle::Config& config)
         return TimerHandle::Result::ERR;
     config_                             = config;
 
-    constexpr TIM_TypeDef* instances[(uint16_t)TimerHandle::Config::Peripheral::TIM_CNT] = {TIM2, TIM3, TIM4, TIM5, TIM13, TIM14, TIM15};
+    constexpr TIM_TypeDef* instances[(uint16_t)TimerHandle::Config::Peripheral::TIM_CNT] = {TIM2, TIM3, TIM4, TIM5, TIM12, TIM13, TIM14, TIM15};
 
     // HAL Initialization
     tim_hal_handle_.Instance = instances[tim_idx];
@@ -315,6 +315,14 @@ extern "C"
             __HAL_RCC_TIM15_CLK_ENABLE();
             /** @todo: add isr support */
         }
+        else if(tim_baseHandle->Instance == TIM16){
+            __HAL_RCC_TIM16_CLK_ENABLE();
+            if(cfg.enable_irq)
+            {
+                HAL_NVIC_SetPriority(TIM16_IRQn, 0x0f, 0);
+                HAL_NVIC_EnableIRQ(TIM16_IRQn);
+            }
+        }
     }
 
     void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
@@ -359,6 +367,11 @@ extern "C"
         {
             __HAL_RCC_TIM15_CLK_DISABLE();
         }
+        else if(tim_baseHandle->Instance == TIM16)
+        {
+            __HAL_RCC_TIM16_CLK_DISABLE();
+            HAL_NVIC_DisableIRQ(TIM16_IRQn);
+        }
     }
 }
 
@@ -389,6 +402,11 @@ extern "C" void TIM4_IRQHandler(void)
 extern "C" void TIM5_IRQHandler(void)
 {
     HAL_TIM_IRQHandler(&tim_handles[(int)TimerHandle::Config::Peripheral::TIM_5]
+                            .tim_hal_handle_);
+}
+extern "C" void TIM16_IRQHandler(void)
+{
+    HAL_TIM_IRQHandler(&tim_handles[(int)TimerHandle::Config::Peripheral::TIM_16]
                             .tim_hal_handle_);
 }
 

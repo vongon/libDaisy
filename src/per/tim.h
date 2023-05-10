@@ -53,6 +53,7 @@ class TimerHandle
             TIM_13,    /**< 16-bit counter */
             TIM_14,    /**< 16-bit counter */
             TIM_15,    /**< 16-bit counter */
+            TIM_16,    /**< 16-bit counter */
             TIM_CNT    /**< Shortcut for array length */
         };
 
