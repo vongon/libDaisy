@@ -95,7 +95,7 @@ TimerHandle::Result TimerHandle::Impl::Init(const TimerHandle::Config& config)
         return TimerHandle::Result::ERR;
     config_                             = config;
 
-    constexpr TIM_TypeDef* instances[(uint16_t)TimerHandle::Config::Peripheral::TIM_CNT] = {TIM2, TIM3, TIM4, TIM5, TIM12, TIM13, TIM14, TIM15};
+    constexpr TIM_TypeDef* instances[(uint16_t)TimerHandle::Config::Peripheral::TIM_CNT] = {TIM2, TIM3, TIM4, TIM5, TIM13, TIM14, TIM15, TIM16};
 
     // HAL Initialization
     tim_hal_handle_.Instance = instances[tim_idx];
