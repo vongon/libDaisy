@@ -95,7 +95,7 @@ TimerHandle::Result TimerHandle::Impl::Init(const TimerHandle::Config& config)
         return TimerHandle::Result::ERR;
     config_                             = config;
 
-    constexpr TIM_TypeDef* instances[(uint16_t)TimerHandle::Config::Peripheral::TIM_CNT] = {TIM2, TIM3, TIM4, TIM5, TIM13, TIM14, TIM15, TIM16};
+    constexpr TIM_TypeDef* instances[(uint16_t)TimerHandle::Config::Peripheral::TIM_CNT] = {TIM2, TIM3, TIM4, TIM5, TIM13, TIM14, TIM15, TIM16, TIM17};
 
     // HAL Initialization
     tim_hal_handle_.Instance = instances[tim_idx];
@@ -323,6 +323,14 @@ extern "C"
                 HAL_NVIC_EnableIRQ(TIM16_IRQn);
             }
         }
+        else if(tim_baseHandle->Instance == TIM17){
+            __HAL_RCC_TIM17_CLK_ENABLE();
+            if(cfg.enable_irq)
+            {
+                HAL_NVIC_SetPriority(TIM17_IRQn, 0x0f, 0);
+                HAL_NVIC_EnableIRQ(TIM17_IRQn);
+            }
+        }
     }
 
     void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
@@ -372,6 +380,11 @@ extern "C"
             __HAL_RCC_TIM16_CLK_DISABLE();
             HAL_NVIC_DisableIRQ(TIM16_IRQn);
         }
+        else if(tim_baseHandle->Instance == TIM17)
+        {
+            __HAL_RCC_TIM17_CLK_DISABLE();
+            HAL_NVIC_DisableIRQ(TIM17_IRQn);
+        }
     }
 }
 
@@ -407,6 +420,11 @@ extern "C" void TIM5_IRQHandler(void)
 extern "C" void TIM16_IRQHandler(void)
 {
     HAL_TIM_IRQHandler(&tim_handles[(int)TimerHandle::Config::Peripheral::TIM_16]
+                            .tim_hal_handle_);
+}
+extern "C" void TIM17_IRQHandler(void)
+{
+    HAL_TIM_IRQHandler(&tim_handles[(int)TimerHandle::Config::Peripheral::TIM_17]
                             .tim_hal_handle_);
 }
 
