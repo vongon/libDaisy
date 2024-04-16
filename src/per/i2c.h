@@ -185,6 +185,10 @@ class I2CHandle
                              uint16_t data_size,
                              uint32_t timeout);
 
+    uint32_t GetError();
+
+    void DeInit();
+
     /** Writes an amount of data from a specific memory address. 
     *   This method will return an error if the I2C peripheral is in slave mode. 
     * 
@@ -201,7 +205,6 @@ class I2CHandle
                               uint8_t* data,
                               uint16_t data_size,
                               uint32_t timeout);
-
 
     class Impl; /**< & */
 

@@ -357,6 +357,14 @@ class Mcp23X17
         return pin_data;
     }
 
+    uint32_t GetError() { 
+        return transport.i2c_.GetError(); 
+    }
+
+    void DeInitI2c(){
+        transport.i2c_.DeInit();
+    }
+
     /**
      * @brief Fetches pin state from the result of recent Read() call. Useful to preserve unneeded reads
      * 

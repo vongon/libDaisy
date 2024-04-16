@@ -44,6 +44,10 @@ class I2CHandle::Impl
                                         uint16_t data_size,
                                         uint32_t timeout);
 
+    uint32_t GetError();
+
+    void DeInit();
+
     I2CHandle::Result WriteDataAtAddress(uint16_t address,
                                          uint16_t mem_address,
                                          uint16_t mem_address_size,
@@ -434,6 +438,16 @@ I2CHandle::Result I2CHandle::Impl::ReadDataAtAddress(uint16_t address,
         return I2CHandle::Result::ERR;
     }
     return I2CHandle::Result::OK;
+}
+
+uint32_t I2CHandle::Impl::GetError()
+{
+    return HAL_I2C_GetError(&i2c_hal_handle_);
+}
+
+void I2CHandle::Impl::DeInit()
+{
+    HAL_I2C_DeInit(&i2c_hal_handle_);
 }
 
 I2CHandle::Result I2CHandle::Impl::WriteDataAtAddress(uint16_t address,
@@ -858,6 +872,16 @@ I2CHandle::Result I2CHandle::ReadDataAtAddress(uint16_t address,
 {
     return pimpl_->ReadDataAtAddress(
         address, mem_address, mem_address_size, data, data_size, timeout);
+}
+
+uint32_t I2CHandle::GetError()
+{
+    return pimpl_->GetError();
+}
+
+void I2CHandle::DeInit()
+{
+    pimpl_->DeInit();
 }
 
 I2CHandle::Result I2CHandle::WriteDataAtAddress(uint16_t address,
